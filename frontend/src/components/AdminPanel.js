@@ -1,88 +1,130 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './AdminPanel.module.css';
 
 const AdminPanel = ({ onFilmsGenerated }) => {
-  const [letterboxdUsers, setLetterboxdUsers] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  // État pour la liste des films
   const [films, setFilms] = useState([]);
-  const [error, setError] = useState('');
+  const [nextId, setNextId] = useState(1);
+  
+  // État pour la recherche Letterboxd
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
-  // Films de test (simulant les films communs récupérés)
-  const generateTestFilms = () => {
-    return [
-      { title: 'Oppenheimer', year: '2023', letterboxdUrl: 'https://letterboxd.com/film/oppenheimer/' },
-      { title: 'Dune', year: '2021', letterboxdUrl: 'https://letterboxd.com/film/dune-2021/' },
-      { title: 'The Batman', year: '2022', letterboxdUrl: 'https://letterboxd.com/film/the-batman/' },
-      { title: 'Avatar: The Way of Water', year: '2022', letterboxdUrl: 'https://letterboxd.com/film/avatar-the-way-of-water/' },
-      { title: 'Killers of the Flower Moon', year: '2023', letterboxdUrl: 'https://letterboxd.com/film/killers-of-the-flower-moon/' },
-      { title: 'The Holdovers', year: '2023', letterboxdUrl: 'https://letterboxd.com/film/the-holdovers/' },
-      { title: 'Perfect Days', year: '2023', letterboxdUrl: 'https://letterboxd.com/film/perfect-days-2023/' },
-      { title: 'Anatomy of a Fall', year: '2023', letterboxdUrl: 'https://letterboxd.com/film/anatomy-of-a-fall/' },
-      { title: 'The Iron Claw', year: '2023', letterboxdUrl: 'https://letterboxd.com/film/the-iron-claw/' },
-      { title: 'Furiosa: A Mad Max Saga', year: '2024', letterboxdUrl: 'https://letterboxd.com/film/furiosa-a-mad-max-saga/' }
-    ].map((film, index) => ({
-      ...film,
-      id: index + 1,
+  // Ajouter un film vide au tableau
+  const addEmptyFilm = () => {
+    const newFilm = {
+      id: nextId,
+      titre: '',
+      location: '',
+      lieuFilm: '',
       iframe: '',
-      difficulty: 'test',
-      thematic: 'test'
-    }));
-  };
-
-  const handleGenerateFilms = async () => {
-    const usernames = letterboxdUsers.split(',').map(u => u.trim()).filter(u => u);
+      difficulty: '',
+      theme: 'test',
+      letterboxd: ''
+    };
     
-    if (usernames.length === 0) {
-      setError('Veuillez entrer au moins un pseudo Letterboxd');
-      return;
-    }
-
-    setIsLoading(true);
-    setError('');
-
-    try {
-      // Simulation du scraping Letterboxd
-      console.log('Génération des films pour:', usernames);
-      
-      // Simulation d'un délai
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const generatedFilms = generateTestFilms();
-      setFilms(generatedFilms);
-      
-      if (onFilmsGenerated) {
-        onFilmsGenerated(generatedFilms);
-      }
-      
-    } catch (err) {
-      setError('Erreur lors de la génération des films: ' + err.message);
-    } finally {
-      setIsLoading(false);
-    }
+    setFilms(prev => [...prev, newFilm]);
+    setNextId(prev => prev + 1);
   };
 
+  // Mettre à jour un champ de film
   const updateFilm = (filmId, field, value) => {
     setFilms(prev => prev.map(film => 
       film.id === filmId ? { ...film, [field]: value } : film
     ));
   };
 
+  // Supprimer un film
+  const deleteFilm = (filmId) => {
+    setFilms(prev => prev.filter(film => film.id !== filmId));
+  };
+
+  // Recherche sur Letterboxd (simulation pour l'instant)
+  const searchLetterboxd = async () => {
+    if (!searchQuery.trim()) return;
+    
+    setIsSearching(true);
+    setShowSearchResults(false);
+
+    try {
+      // Simulation d'appel API (tu devras remplacer par ton scraper)
+      // Pour l'instant on simule avec des données factices
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simule le délai
+      
+      const mockResults = [
+        {
+          title: `${searchQuery} - Film 1`,
+          year: '2020',
+          letterboxdUrl: `https://letterboxd.com/film/${searchQuery.toLowerCase().replace(/\s+/g, '-')}-1/`
+        },
+        {
+          title: `${searchQuery} - Film 2`, 
+          year: '2019',
+          letterboxdUrl: `https://letterboxd.com/film/${searchQuery.toLowerCase().replace(/\s+/g, '-')}-2/`
+        },
+        {
+          title: `${searchQuery} - Film 3`,
+          year: '2021', 
+          letterboxdUrl: `https://letterboxd.com/film/${searchQuery.toLowerCase().replace(/\s+/g, '-')}-3/`
+        }
+      ];
+      
+      setSearchResults(mockResults);
+      setShowSearchResults(true);
+      
+    } catch (error) {
+      console.error('Erreur lors de la recherche:', error);
+      alert('Erreur lors de la recherche Letterboxd');
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Ajouter un film depuis les résultats de recherche
+  const addFilmFromSearch = (result) => {
+    const newFilm = {
+      id: nextId,
+      titre: result.title,
+      location: '',
+      lieuFilm: '',
+      iframe: '',
+      difficulty: '',
+      theme: 'test',
+      letterboxd: result.letterboxdUrl
+    };
+    
+    setFilms(prev => [...prev, newFilm]);
+    setNextId(prev => prev + 1);
+    setShowSearchResults(false);
+    setSearchQuery('');
+  };
+
+  // Sauvegarder la base de données
   const saveDatabase = () => {
+    const validFilms = films.filter(film => 
+      film.titre.trim() !== '' || 
+      film.location.trim() !== '' || 
+      film.iframe.trim() !== ''
+    );
+
+    if (validFilms.length === 0) {
+      alert('Aucun film à sauvegarder !');
+      return;
+    }
+
     const database = {
-      users: letterboxdUsers.split(',').map(u => u.trim()).filter(u => u),
-      films: films.filter(film => 
-        film.iframe.trim() !== '' && 
-        film.difficulty !== '' && 
-        film.thematic !== ''
-      ), // Tous les films avec tous les champs remplis
-      createdAt: new Date().toISOString()
+      films: validFilms,
+      createdAt: new Date().toISOString(),
+      totalFilms: validFilms.length
     };
 
     // Créer un fichier JSON téléchargeable
     const dataStr = JSON.stringify(database, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
     
-    const exportFileDefaultName = `game-database-${new Date().toISOString().slice(0,10)}.json`;
+    const exportFileDefaultName = `films-database-${new Date().toISOString().slice(0,10)}.json`;
     
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
@@ -92,114 +134,160 @@ const AdminPanel = ({ onFilmsGenerated }) => {
     console.log('Base de données sauvegardée:', database);
   };
 
-  const deleteFilm = (filmId) => {
-    setFilms(prev => prev.filter(film => film.id !== filmId));
-  };
-
-  const getReadyFilmsCount = () => {
-    return films.filter(film => 
-      film.iframe.trim() !== '' && 
-      film.difficulty !== '' && 
-      film.thematic !== ''
-    ).length;
-  };
-
+  // Calculer le statut d'un film
   const getFilmStatus = (film) => {
+    const hasBasicInfo = film.titre.trim() !== '' && film.location.trim() !== '';
     const hasIframe = film.iframe.trim() !== '';
     const hasDifficulty = film.difficulty !== '';
-    const hasThematic = film.thematic !== '';
     
-    if (hasIframe && hasDifficulty && hasThematic) {
+    if (hasBasicInfo && hasIframe && hasDifficulty) {
       return 'ready';
-    } else if (hasIframe || hasDifficulty || hasThematic) {
+    } else if (hasBasicInfo || hasIframe || hasDifficulty) {
       return 'partial';
     } else {
       return 'empty';
     }
   };
 
+  // Statistiques
+  const getStats = () => {
+    const total = films.length;
+    const ready = films.filter(film => getFilmStatus(film) === 'ready').length;
+    const partial = films.filter(film => getFilmStatus(film) === 'partial').length;
+    const empty = films.filter(film => getFilmStatus(film) === 'empty').length;
+    
+    return { total, ready, partial, empty };
+  };
+
+  const stats = getStats();
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>🎬 Administration du Jeu</h1>
-        <p className={styles.subtitle}>Interface de gestion des films et questions</p>
+        <h1 className={styles.title}>🎬 Base de Données des Films</h1>
+        <p className={styles.subtitle}>Gestion des films et lieux de tournage</p>
       </div>
 
-      {/* Section de génération */}
-      <div className={styles.generationSection}>
-        <h2 className={styles.sectionTitle}>📚 Génération des Films</h2>
+      {/* Section de recherche Letterboxd */}
+      <div className={styles.searchSection}>
+        <h2 className={styles.sectionTitle}>🔍 Ajouter un Film depuis Letterboxd</h2>
         
-        <div className={styles.inputGroup}>
-          <label className={styles.label}>
-            Pseudos Letterboxd (séparés par des virgules) :
-          </label>
+        <div className={styles.searchBox}>
           <input
             type="text"
-            value={letterboxdUsers}
-            onChange={(e) => setLetterboxdUsers(e.target.value)}
-            placeholder="Potatoze, diegobrando7, autrepseudo..."
-            className={styles.input}
-            disabled={isLoading}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Tapez le nom d'un film à chercher..."
+            className={styles.searchInput}
+            onKeyPress={(e) => e.key === 'Enter' && searchLetterboxd()}
           />
+          <button 
+            onClick={searchLetterboxd}
+            disabled={isSearching || !searchQuery.trim()}
+            className={styles.searchButton}
+          >
+            {isSearching ? '🔍 Recherche...' : '🔍 Chercher'}
+          </button>
         </div>
 
-        <button 
-          onClick={handleGenerateFilms}
-          disabled={isLoading || !letterboxdUsers.trim()}
-          className={styles.generateButton}
-        >
-          {isLoading ? '⏳ Génération en cours...' : '🚀 Générer la liste des films'}
-        </button>
-
-        {error && (
-          <div className={styles.error}>
-            ❌ {error}
+        {showSearchResults && searchResults.length > 0 && (
+          <div className={styles.searchResults}>
+            <h3>Résultats de recherche :</h3>
+            {searchResults.map((result, index) => (
+              <div key={index} className={styles.searchResultItem}>
+                <div className={styles.resultInfo}>
+                  <strong>{result.title}</strong>
+                  <small>({result.year})</small>
+                </div>
+                <button
+                  onClick={() => addFilmFromSearch(result)}
+                  className={styles.addResultButton}
+                >
+                  ➕ Ajouter
+                </button>
+              </div>
+            ))}
           </div>
         )}
       </div>
 
-      {/* Section du tableau */}
-      {films.length > 0 && (
-        <div className={styles.tableSection}>
-          <div className={styles.tableHeader}>
-            <h2 className={styles.sectionTitle}>🎯 Configuration des Questions</h2>
-            <div className={styles.stats}>
-              <span className={styles.stat}>Total: {films.length} films</span>
-              <span className={styles.stat}>Prêts: {getReadyFilmsCount()}</span>
-            </div>
+      {/* Section tableau */}
+      <div className={styles.tableSection}>
+        <div className={styles.tableHeader}>
+          <h2 className={styles.sectionTitle}>📋 Liste des Films</h2>
+          <div className={styles.stats}>
+            <span className={styles.stat}>Total: {stats.total}</span>
+            <span className={styles.stat}>Prêts: {stats.ready}</span>
+            <span className={styles.stat}>Partiels: {stats.partial}</span>
+            <span className={styles.stat}>Vides: {stats.empty}</span>
           </div>
+          <button onClick={addEmptyFilm} className={styles.addButton}>
+            ➕ Ajouter Film Vide
+          </button>
+        </div>
 
+        {films.length === 0 ? (
+          <div className={styles.emptyState}>
+            <p>Aucun film dans la base. Utilisez la recherche ou ajoutez un film vide.</p>
+          </div>
+        ) : (
           <div className={styles.tableWrapper}>
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th className={styles.th}>Film</th>
-                  <th className={styles.th}>iframe Street View</th>
+                  <th className={styles.th}>Titre</th>
+                  <th className={styles.th}>Location<br/><small>(lieu de tournage)</small></th>
+                  <th className={styles.th}>Lieu-Film<br/><small>(correspond dans le film)</small></th>
+                  <th className={styles.th}>Iframe<br/><small>(lien Google Street View)</small></th>
                   <th className={styles.th}>Difficulté</th>
-                  <th className={styles.th}>Thématique</th>
+                  <th className={styles.th}>Thème</th>
+                  <th className={styles.th}>Letterboxd<br/><small>(lien page film)</small></th>
                   <th className={styles.th}>Statut</th>
                   <th className={styles.th}>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {films.map(film => {
+                {films.map((film) => {
                   const status = getFilmStatus(film);
                   return (
                     <tr key={film.id} className={styles.tr}>
                       <td className={styles.td}>
-                        <div className={styles.filmInfo}>
-                          <strong>{film.title}</strong>
-                          <small>({film.year})</small>
-                        </div>
+                        <input
+                          type="text"
+                          value={film.titre}
+                          onChange={(e) => updateFilm(film.id, 'titre', e.target.value)}
+                          placeholder="Titre du film"
+                          className={styles.input}
+                        />
+                      </td>
+                      
+                      <td className={styles.td}>
+                        <input
+                          type="text"
+                          value={film.location}
+                          onChange={(e) => updateFilm(film.id, 'location', e.target.value)}
+                          placeholder="ex: Paris, France"
+                          className={styles.input}
+                        />
+                      </td>
+                      
+                      <td className={styles.td}>
+                        <input
+                          type="text"
+                          value={film.lieuFilm}
+                          onChange={(e) => updateFilm(film.id, 'lieuFilm', e.target.value)}
+                          placeholder="ex: Maison de Julie"
+                          className={styles.input}
+                        />
                       </td>
                       
                       <td className={styles.td}>
                         <textarea
                           value={film.iframe}
                           onChange={(e) => updateFilm(film.id, 'iframe', e.target.value)}
-                          placeholder="Coller l'iframe Google Street View ici..."
+                          placeholder="Lien iframe Google Street View..."
                           className={styles.textarea}
-                          rows={3}
+                          rows="3"
                         />
                       </td>
                       
@@ -209,23 +297,31 @@ const AdminPanel = ({ onFilmsGenerated }) => {
                           onChange={(e) => updateFilm(film.id, 'difficulty', e.target.value)}
                           className={styles.select}
                         >
-                          <option value="test">test</option>
-                          <option value="bebe-cadum">Bébé cadum</option>
-                          <option value="la-on-parle">Là on parle</option>
-                          <option value="god-mode">God mode</option>
+                          <option value="">-- Choisir --</option>
+                          <option value="bebe-cadum">Bébé Cadum</option>
+                          <option value="calmaaa">Calmaaa</option>
+                          <option value="difficulte-terroriste">Difficulté Terroriste</option>
                         </select>
                       </td>
                       
                       <td className={styles.td}>
-                        <select
-                          value={film.thematic}
-                          onChange={(e) => updateFilm(film.id, 'thematic', e.target.value)}
-                          className={styles.select}
-                        >
-                          <option value="test">test</option>
-                          <option value="ma-france">Ma France</option>
-                          <option value="global">Global</option>
-                        </select>
+                        <input
+                          type="text"
+                          value={film.theme}
+                          onChange={(e) => updateFilm(film.id, 'theme', e.target.value)}
+                          placeholder="test"
+                          className={styles.input}
+                        />
+                      </td>
+                      
+                      <td className={styles.td}>
+                        <input
+                          type="url"
+                          value={film.letterboxd}
+                          onChange={(e) => updateFilm(film.id, 'letterboxd', e.target.value)}
+                          placeholder="https://letterboxd.com/film/..."
+                          className={styles.input}
+                        />
                       </td>
                       
                       <td className={styles.td}>
@@ -260,18 +356,18 @@ const AdminPanel = ({ onFilmsGenerated }) => {
               </tbody>
             </table>
           </div>
+        )}
 
-          <div className={styles.actions}>
-            <button 
-              onClick={saveDatabase}
-              className={styles.saveButton}
-              disabled={getReadyFilmsCount() === 0}
-            >
-              💾 Télécharger la Base de Données ({getReadyFilmsCount()} films prêts)
-            </button>
-          </div>
+        <div className={styles.actions}>
+          <button 
+            onClick={saveDatabase}
+            className={styles.saveButton}
+            disabled={stats.total === 0}
+          >
+            💾 Télécharger la Base de Données ({stats.total} films)
+          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 };
