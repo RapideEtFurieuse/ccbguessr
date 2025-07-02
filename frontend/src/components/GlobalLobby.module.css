@@ -1,0 +1,117 @@
+.container {
+  padding: 20px;
+  margin: 20px;
+  border: 2px solid #4CAF50;
+  border-radius: 15px;
+  color: white;
+}
+
+.title {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.playersTitle {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.playersGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.playerCard {
+  padding: 10px 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  text-align: center;
+  color: #333;
+}
+
+.playerPhoto {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-bottom: 5px;
+}
+
+.playerName {
+  margin: 0;
+  font-weight: bold;
+  color: #333;
+}
+
+.creatorBadge {
+  font-size: 12px;
+  color: #FF6F00;
+  font-weight: bold;
+}
+
+.creatorPanel {
+  margin-top: 30px;
+  padding: 20px;
+  border: 2px solid #FFD700;
+  border-radius: 10px;
+  color: white;
+}
+
+.configTitle {
+  color: white;
+  margin-bottom: 15px;
+}
+
+.configSection {
+  margin: 20px 0;
+}
+
+.configLabel {
+  font-size: 18px;
+  margin-right: 10px;
+  color: white;
+}
+
+.configSelect {
+  padding: 10px;
+  font-size: 16px;
+  color: #333;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.startButton {
+  padding: 15px 30px;
+  font-size: 20px;
+  background-color: #FF4500;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.startButton:hover {
+  background-color: #e03d00;
+}
+
+.waitingMessage {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  color: #1976D2;
+  text-align: center;
+}

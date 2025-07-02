@@ -1,0 +1,253 @@
+.container {
+  padding: 20px;
+  margin: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  color: white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.title {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.streetViewContainer {
+  margin: 20px 0;
+  text-align: center;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.streetViewFrame {
+  width: 100%;
+  max-width: 800px;
+  height: 450px;
+  border: 0;
+  border-radius: 15px;
+}
+
+.question {
+  text-align: center;
+  margin: 30px 0;
+  font-size: 22px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+}
+
+.statusBar {
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.statusBar.answered {
+  background-color: rgba(0, 123, 255, 0.2);
+  border: 2px solid rgba(0, 123, 255, 0.5);
+}
+
+.statusBar.waiting {
+  background-color: rgba(248, 249, 250, 0.2);
+  border: 2px solid rgba(248, 249, 250, 0.5);
+}
+
+.counter {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.userAnswer {
+  font-style: italic;
+  margin-top: 10px;
+}
+
+.gameInterface {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 30px;
+  border-radius: 15px;
+  margin-top: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.modeSelection {
+  margin-bottom: 30px;
+}
+
+.modeTitle {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.modeButtons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.modeButton {
+  padding: 20px;
+  font-size: 16px;
+  color: white;
+  border: 3px solid transparent;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 140px;
+  backdrop-filter: blur(10px);
+}
+
+.modeButton.duo {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+}
+
+.modeButton.carre {
+  background: linear-gradient(135deg, #FF9800, #f57c00);
+}
+
+.modeButton.cash {
+  background: linear-gradient(135deg, #F44336, #d32f2f);
+}
+
+.modeButton:hover,
+.modeButton.selected {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.modeIcon {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.modeLabel {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.modePoints {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.modeDescription {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.answerSection {
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 25px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+}
+
+.answerTitle {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.optionsGrid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.carreGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 20px;
+  max-width: 600px;
+  margin: 20px auto 0;
+}
+
+.optionButton {
+  padding: 15px 20px;
+  font-size: 16px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.optionButton:hover {
+  background-color: rgba(255, 255, 255, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.optionButton.selectedOption {
+  background-color: #4CAF50;
+  color: white;
+  border-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.cashInput {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.textInput {
+  padding: 15px 20px;
+  font-size: 18px;
+  width: 300px;
+  max-width: 90%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  margin: 20px 0;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+}
+
+.textInput:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.submitSection {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.submitButton {
+  padding: 15px 35px;
+  font-size: 18px;
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.submitButton:hover {
+  background: linear-gradient(135deg, #1976D2, #1565C0);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
