@@ -45,7 +45,7 @@ const GamePlaying = ({
       {/* Google Street View */}
       <div className={styles.streetViewContainer}>
         <iframe
-          src="https://www.google.com/maps/embed/v1/streetview?key=AIzaSyBf0tfsqfa_Mz0xlc2SZPYwtCBm8Wg64-8&location=48.8584,2.2945&heading=210&pitch=10&fov=75"
+          src="https://www.google.com/maps/embed/v1/streetview?key=CLEAPI&location=48.8584,2.2945&heading=210&pitch=10&fov=75"
           className={styles.streetViewFrame}
           allowFullScreen=""
           loading="lazy"
